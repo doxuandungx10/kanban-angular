@@ -1,0 +1,19 @@
+{
+  "api": {
+    "baseUrl": "http://localhost:3002",
+    "emulatorUrl": "https://lisemulator.stc.vn"
+  },
+    "sso": {
+      "baseUrl": "http://10.33.68.71:8888/vnpt-sso"
+    },
+  "pageSize": [
+    10,
+    20,
+    50,
+    100
+  ],
+  "page": 1,
+  "defaultPage": 20
+}
+
+
