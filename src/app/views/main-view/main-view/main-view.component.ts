@@ -8,16 +8,17 @@ import { Board } from 'src/app/models/board.model';
 import { IBoard } from 'src/app/models/board.model';
 import { Column } from 'src/app/models/column.model';
 import { WorkspaceService } from '../../../service/workspace.service';
-import { TicketService } from '../../../service/ticket.service';
 import { TaskService } from '../../../service/task.service';
+import { BoardService } from '../../../service/board.service';
 import { map, mergeMap } from 'rxjs/operators';
 import { interval, of } from 'rxjs';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.scss'],
-  providers: [WorkspaceService, TicketService, TaskService],
+  providers: [WorkspaceService, TaskService, BoardService],
 })
 export class MainViewComponent implements OnInit {
   isEditing: boolean = false;
@@ -26,12 +27,7 @@ export class MainViewComponent implements OnInit {
   lstTicket: any[] = [];
   lstTask: any[] = [];
   isVisibleDetail: boolean = false;
-
-  constructor(
-    private workspaceService: WorkspaceService,
-    private ticketService: TicketService,
-    private taskService: TaskService
-  ) {}
+  boardId: String = '';
 
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
@@ -99,80 +95,75 @@ export class MainViewComponent implements OnInit {
     ],
   };
 
+  columnStatus = [
+    {
+      name: 'Backlog',
+      status: 0,
+      tasks: [],
+    },
+    {
+      name: 'To do',
+      status: 1,
+      tasks: [],
+    },
+    {
+      name: 'Doing',
+      status: 2,
+      tasks: [],
+    },
+    {
+      name: 'Done',
+      status: 3,
+      tasks: [],
+    },
+  ];
+
+  constructor(
+    private workspaceService: WorkspaceService,
+    private taskService: TaskService,
+    private boardService: BoardService,
+    private route: ActivatedRoute
+  ) {}
+
   ngOnInit() {
-    this.getAllTicketByWS();
-  }
-
-  getAllTicketByWS() {
-    const workspaceId = '635a4342d33b9b9992200bd0';
-    // this.ticketService
-    //   .getAllTicketByWS(workspaceId)
-    //   .pipe(
-    //     map((data: any) => {
-    //       let tickets = [];
-    //       data.forEach((element) => {
-    //         tickets.push(element.tickets);
-    //       });
-    //       return of(tickets);
-    //     }),
-    //     mergeMap((data: any) =>
-    //       this.getAllTaskByTicket(data);
-    //     )
-    //   )
-    //   .subscribe(
-    //     (res: any) => {
-    //       console.log(res);
-    //       if (res !== null) {
-    //         console.log(res);
-
-    //         this.lstTicket = res[0].tickets;
-    //         console.log('lstTicket', this.lstTicket);
-    //         // for (let i = 0; i < this.lstTicket.length; i++) {
-    //         //   this.taskService
-    //         //     .getAllTaskByTicket(this.lstTicket[i].id)
-    //         //     .subscribe(
-    //         //       (res: any) => {
-    //         //         if (res !== null) {
-    //         //           this.lstTicket[i].push();
-    //         //         }
-    //         //       },
-    //         //       (error) => {}
-    //         //     );
-    //         // }
-    //         console.log('lstTicket', this.lstTicket);
-    //       }
-    //     },
-    //     (error) => {}
-    //   );
-
-    new Promise((resolve, reject) => {
-      this.ticketService.getAllTicketByWS(workspaceId).subscribe(
-        (res: any) => {
-          let tickets = [];
-          res.forEach(elm => {
-            tickets.push(elm.tickets)
-          })
-          console.log(tickets);
-          resolve(tickets);
-        },
-        (error) => {}
-      );
-    }).then((data: any[]) => {
-      console.log(data)
-      let tasks = [];
-      data.forEach(elm => {
-        this.taskService.getAllTaskByTicket(elm.id).subscribe(res => {
-          console.log(res);
-        })
-      })
+    this.route.params.subscribe((params: Params) => {
+      this.boardId = params['id'];
+      this.getAllTaskByBoard(this.boardId);
     });
   }
 
-  getAllTaskByTicket(id) {
-    this.taskService.getAllTaskByTicket(id).subscribe(
+  getAllBoardByWS() {
+    // const workspaceId = '635a4342d33b9b9992200bd0';
+    // new Promise((resolve, reject) => {
+    //   this.ticketService.getAllTicketByWS(workspaceId).subscribe(
+    //     (res: any) => {
+    //       let tickets = [];
+    //       res.forEach((elm) => {
+    //         tickets.push(elm.tickets);
+    //       });
+    //       console.log(tickets);
+    //       resolve(tickets);
+    //     },
+    //     (error) => {}
+    //   );
+    // }).then((data: any[]) => {
+    //   console.log(data);
+    //   let tasks = [];
+    //   data.forEach((elm) => {
+    //     this.taskService.getAllTaskByTicket(elm.id).subscribe((res) => {
+    //       console.log(res);
+    //     });
+    //   });
+    // });
+  }
+
+  getAllTaskByBoard(id) {
+    this.taskService.getAllTaskByBoard(id).subscribe(
       (res: any) => {
         if (res !== null) {
           this.lstTask = res[0].tasks;
+          this.columnStatus[0].tasks = this.lstTask;
+          console.log('lstColumn', this.columnStatus);
           console.log('lstTask', this.lstTask);
         }
       },

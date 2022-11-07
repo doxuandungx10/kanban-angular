@@ -71,7 +71,7 @@ const routes: Routes = [
           import('./views/pages/pages.module').then((m) => m.PagesModule)
       },
       {
-        path: 'main-view',
+        path: 'board/:id',
         loadChildren: () =>
           import('./views/main-view/main-view.module').then((m) => m.MainviewModule)
       },

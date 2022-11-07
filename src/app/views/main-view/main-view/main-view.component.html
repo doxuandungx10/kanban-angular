@@ -1,28 +1,28 @@
 
 <div class="root">
-  <div class="navbar has-background-dark">
+  <!-- <div class="navbar has-background-dark">
     <div class="navbar-brand">
       <div class="navbar-item">
         <h1 class="app-name has-gradient-text">kanban</h1>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="board">
-    <div class="board-bar">
-      <p class="board-name">{{ board2.name }}</p>
+    <!-- <div class="board-bar">
+      <p class="board-name">{{ board2.name }}</p> -->
       <!-- <nz-tabset>
         <nz-tab nzTitle="Tab 1">Content of Tab Pane 1</nz-tab>
         <nz-tab nzTitle="Tab 2">Content of Tab Pane 2</nz-tab>
         <nz-tab nzTitle="Tab 3">Content of Tab Pane 3</nz-tab>
       </nz-tabset> -->
-    </div>
+    <!-- </div> -->
 
     <div class="board-wrapper">
       <div class="board-columns" cdkDropListGroup>
-        <div class="board-column" *ngFor="let item of board2.columns">
+        <div class="board-column" *ngFor="let column of columnStatus">
           <div class="column-title">
-            {{ item.name }}
+            {{ column.name }}
               <button class="btn-edit" nz-button nzType="default" >
                 <!-- <span nz-icon nzType="more" nzTheme="outline"></span> -->
                 <!-- <span class="fa fa-edit fa-fw"></span> -->
@@ -31,11 +31,11 @@
           </div>
           <div class="tasks-container"
           cdkDropList
-          [cdkDropListData]="item.tasks"
+          [cdkDropListData]="column.tasks"
           (cdkDropListDropped)="drop($event)">
-            <div class="task" *ngFor="let task of item.tasks" cdkDrag>
-              <input *ngIf="isEditing && curTaskId == task.id" type="text" [value]="task.name">
-              {{ task.name }}
+            <div class="task" *ngFor="let task of column.tasks" cdkDrag>
+              <input *ngIf="isEditing && curTaskId == task.id" type="text" [value]="task.describe">
+              {{ task.describe }}
               <button class="btn-edit" nz-button nzType="default" >
                 <span nz-icon nzType="edit" nzTheme="outline"></span>
               </button>

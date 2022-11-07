@@ -5,7 +5,7 @@
   id="sidebar"
   visible
 >
-  <c-sidebar-brand
+  <!-- <c-sidebar-brand
     [brandFull]="{
       src: 'assets/img/brand/stock-earnings.svg',
       width: 200,
@@ -21,10 +21,11 @@
     }"
     routerLink="./"
   >
-  </c-sidebar-brand>
+  </c-sidebar-brand> -->
     <perfect-scrollbar [config]="perfectScrollbarConfig">
   <!--  [perfectScrollbar]="perfectScrollbarConfig"-->
   <c-sidebar-nav
+    *ngIf="showSidebar"
     [navItems]="navItems"
   >
   </c-sidebar-nav>

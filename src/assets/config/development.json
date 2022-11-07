@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "http://localhost:3002",
+    "baseUrl": "https://x-career-06-team1-be.herokuapp.com",
     "emulatorUrl": "https://lisemulator.stc.vn"
   },
     "sso": {

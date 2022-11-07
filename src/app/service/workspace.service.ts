@@ -6,7 +6,16 @@ import { UrlConstant } from '../shared/constants/url.class';
 
 @Injectable()
 export class WorkspaceService extends BaseService {
-  getAllWorkSpace(payload): any {
-    return this.get(UrlConstant.WORKSPACE, payload);
+  getAllWorkSpace(): any {
+    return this.get(
+      UrlConstant.WORKSPACE + '/getAllWorkSpacesOfAllUsers'
+    );
   }
+
+  getAllBoardByWS(id): any {
+    return this.get(
+      UrlConstant.WORKSPACE + '/getAllBoardsOfOneWorkSpace' + '?id=' + id
+    );
+  }
+
 }

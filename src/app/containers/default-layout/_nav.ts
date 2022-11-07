@@ -12,47 +12,52 @@ export const navItems: INavData[] = [
   // },
   {
     title: true,
-    name: 'Stocks',
+    name: 'Workspace',
+  },
+  {
+    name: 'Board 1',
+    url: '/board/:1',
+    iconComponent: { name: 'cil-star' },
+  },
+  {
+    name: 'Board 2',
+    url: '/board/:2',
+    iconComponent: { name: 'cil-star' },
   },
   {
     name: 'Summary',
     url: '/theme/typography',
     iconComponent: { name: 'cil-puzzle' },
   },
-  {
-    name: 'Top new',
-    url: '/theme/colors',
-    iconComponent: { name: 'cil-puzzle' },
-  },
-  {
-    name: 'Chart',
-    url: '/base/accordion',
-    iconComponent: { name: 'cil-puzzle' },
-  },
-  {
-    title: true,
-    name: 'Extra',
-  },
-  {
-    name: 'Search',
-    url: '/base/cards',
-    iconComponent: { name: 'cil-star' },
-  },
-  {
-    name: 'Watchlist',
-    url: '/base/collapse',
-    iconComponent: { name: 'cil-star' },
-  },
-  {
-    name: 'Portfolio',
-    url: '/base/placeholder',
-    iconComponent: { name: 'cil-star' },
-  },
-  {
-    name: 'Main view',
-    url: '/main-view',
-    iconComponent: { name: 'cil-star' },
-  },
+  // {
+  //   name: 'Top new',
+  //   url: '/theme/colors',
+  //   iconComponent: { name: 'cil-puzzle' },
+  // },
+  // {
+  //   name: 'Chart',
+  //   url: '/base/accordion',
+  //   iconComponent: { name: 'cil-puzzle' },
+  // },
+  // {
+  //   title: true,
+  //   name: 'Extra',
+  // },
+  // {
+  //   name: 'Search',
+  //   url: '/base/cards',
+  //   iconComponent: { name: 'cil-star' },
+  // },
+  // {
+  //   name: 'Watchlist',
+  //   url: '/base/collapse',
+  //   iconComponent: { name: 'cil-star' },
+  // },
+  // {
+  //   name: 'Portfolio',
+  //   url: '/base/placeholder',
+  //   iconComponent: { name: 'cil-star' },
+  // },
   // {
   //   name: 'Typography',
   //   url: '/theme/typography',
