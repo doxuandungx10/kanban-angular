@@ -12,9 +12,9 @@ export class WorkspaceService extends BaseService {
     );
   }
 
-  getAllBoardByWS(id): any {
+  getWSById(id: any): any {
     return this.get(
-      UrlConstant.WORKSPACE + '/getAllBoardsOfOneWorkSpace' + '?id=' + id
+      UrlConstant.WORKSPACE + '/getWorkSpaceByID' + '?id=' + id
     );
   }
 

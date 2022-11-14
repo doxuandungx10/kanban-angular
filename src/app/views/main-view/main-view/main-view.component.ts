@@ -1,3 +1,6 @@
+import { describe } from 'node:test';
+import { Constant } from './../../../shared/constants/constant.class';
+import { NotificationService } from './../../../service/notification.service';
 import { Component, OnInit } from '@angular/core';
 import {
   CdkDragDrop,
@@ -10,15 +13,14 @@ import { Column } from 'src/app/models/column.model';
 import { WorkspaceService } from '../../../service/workspace.service';
 import { TaskService } from '../../../service/task.service';
 import { BoardService } from '../../../service/board.service';
-import { map, mergeMap } from 'rxjs/operators';
-import { interval, of } from 'rxjs';
 import { ActivatedRoute, Params } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.scss'],
-  providers: [WorkspaceService, TaskService, BoardService],
+  providers: [WorkspaceService, TaskService, BoardService, NotificationService],
 })
 export class MainViewComponent implements OnInit {
   isEditing: boolean = false;
@@ -27,7 +29,10 @@ export class MainViewComponent implements OnInit {
   lstTicket: any[] = [];
   lstTask: any[] = [];
   isVisibleDetail: boolean = false;
+  isVisibleAdd: boolean = false;
   boardId: String = '';
+  selectedTask: any;
+  form: FormGroup;
 
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
@@ -122,13 +127,21 @@ export class MainViewComponent implements OnInit {
     private workspaceService: WorkspaceService,
     private taskService: TaskService,
     private boardService: BoardService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notificationService: NotificationService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
       this.boardId = params['id'];
       this.getAllTaskByBoard(this.boardId);
+    });
+    this.form = this.fb.group({
+      id: [null],
+      boardId: [null],
+      describe: [null],
+      status: [null]
     });
   }
 
@@ -158,11 +171,40 @@ export class MainViewComponent implements OnInit {
   }
 
   getAllTaskByBoard(id) {
-    this.taskService.getAllTaskByBoard(id).subscribe(
+    this.columnStatus = [
+      {
+        name: 'Backlog',
+        status: 0,
+        tasks: [],
+      },
+      {
+        name: 'To do',
+        status: 1,
+        tasks: [],
+      },
+      {
+        name: 'Doing',
+        status: 2,
+        tasks: [],
+      },
+      {
+        name: 'Done',
+        status: 3,
+        tasks: [],
+      },
+    ];
+    this.lstTask = []
+    this.boardService.getBoardById(id).subscribe(
       (res: any) => {
         if (res !== null) {
           this.lstTask = res[0].tasks;
-          this.columnStatus[0].tasks = this.lstTask;
+          this.columnStatus.forEach(col =>
+            this.lstTask.forEach(task => {
+              if (col.status == task.status) {
+                col.tasks.push(task)
+              }
+            })
+          )
           console.log('lstColumn', this.columnStatus);
           console.log('lstTask', this.lstTask);
         }
@@ -198,17 +240,72 @@ export class MainViewComponent implements OnInit {
   //   console.log('abc');
   // }
 
-  showModalUpdate() {
+  showModalUpdate(data) {
     this.isVisibleDetail = true;
+    this.form.patchValue({
+      id: data._id,
+      boardId: this.boardId,
+      describe: data.describe,
+      status: data.status
+    })
+    console.log(this.form.value);
+
+  }
+
+  showModalAdd() {
+    this.isVisibleDetail = true;
+    this.form.patchValue({
+      id: '',
+      boardId: this.boardId,
+      describe: '',
+      status: 0
+    })
   }
 
   handleOk(): void {
-    console.log('Button ok clicked!');
-    this.isVisibleDetail = false;
+    const formValue = {
+      task: this.form.value
+    };
+    console.log(formValue);
+
+    if (formValue.task.id === 0) {
+      delete formValue.task.id;
+      this.taskService.addTask(formValue).subscribe(res => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+          formValue.task.id = 0;
+        } else {
+          this.getAllTaskByBoard(this.boardId);
+          this.isVisibleDetail = false;
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+        }
+      }, error => {
+
+      });
+    } else {
+      let id = formValue.task.id
+      delete formValue.task.id;
+      delete formValue.task.boardId;
+      this.taskService.updateTask(id, formValue).subscribe(res => {
+        // console.log('res', res);
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        } else {
+          this.getAllTaskByBoard(this.boardId);
+          this.isVisibleDetail = false;
+          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+        }
+      }, error => {
+
+      });
+      console.log('Button ok clicked!');
+
+    }
   }
 
   handleCancel(): void {
     console.log('Button cancel clicked!');
     this.isVisibleDetail = false;
+    this.isVisibleAdd = false;
   }
 }

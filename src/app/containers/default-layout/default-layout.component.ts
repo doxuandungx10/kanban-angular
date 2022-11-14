@@ -31,7 +31,7 @@ export class DefaultLayoutComponent {
 
   getAllBoardByWS(id) {
     this.showSidebar = false;
-    this.workspaceService.getAllBoardByWS(id).subscribe(
+    this.workspaceService.getWSById(id).subscribe(
       (res: any) => {
         if (res !== null) {
           res[0].boards.forEach((el) =>

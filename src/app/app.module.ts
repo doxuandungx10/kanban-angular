@@ -53,6 +53,9 @@ import {
   CUSTOM_ELEMENTS_SCHEMA
 } from '@angular/core';
 import { AppConfigService } from 'src/app-config.service';
+import { FormsModule } from '@angular/forms';
+import { NotificationService } from './service/notification.service';
+import { en_US, NZ_I18N } from 'ng-zorro-antd/i18n';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -99,14 +102,18 @@ export function configServiceFactory(config: AppConfigService) {
     CardModule,
     ShareModule,
     FontAwesomeModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
+    NotificationService,
     AppConfigService,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
     },
+    { provide: NZ_I18N, useValue: en_US },
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,

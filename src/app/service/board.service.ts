@@ -4,7 +4,7 @@ import { UrlConstant } from '../shared/constants/url.class';
 
 @Injectable()
 export class BoardService extends BaseService {
-  getAllTaskByBoard(id: String): any {
-    return this.get(UrlConstant.TASK + '/getAllTasksOfOneBoard' + '?id=' + id);
+  getBoardById(id: String): any {
+    return this.get(UrlConstant.BOARD + '/getBoardByID' + '?id=' + id);
   }
 }
