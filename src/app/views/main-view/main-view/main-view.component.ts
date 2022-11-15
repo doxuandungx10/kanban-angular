@@ -34,6 +34,9 @@ export class MainViewComponent implements OnInit {
   boardId: String = '';
   selectedTask: any;
   form: FormGroup;
+  formComment: FormGroup;
+  isVisibleComment: boolean = false;
+  taskDescribe: String = '';
 
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
@@ -145,6 +148,10 @@ export class MainViewComponent implements OnInit {
       describe: [null],
       status: [null]
     });
+    this.formComment = this.fb.group({
+      taskID: [null],
+      message: [null],
+    });
   }
 
   getAllBoardByWS() {
@@ -216,6 +223,8 @@ export class MainViewComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    console.log(event);
+
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -229,6 +238,26 @@ export class MainViewComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
+      const formValue = {
+        task: {
+          // id: ,
+          // boardID: this.boardId,
+          // describe: data.describe,
+          // status: data.status
+        }
+      };
+      let id = ''
+      this.taskService.updateTask(id, formValue).subscribe(res => {
+          if (res.success == false) {
+            this.notificationService.showNotification(Constant.ERROR, res.message);
+          } else {
+            this.getAllTaskByBoard(this.boardId);
+            this.isVisibleDetail = false;
+            this.notificationService.showNotification(Constant.SUCCESS, res.message);
+          }
+        }, error => {
+
+        });
     }
   }
 
@@ -308,6 +337,7 @@ export class MainViewComponent implements OnInit {
     console.log('Button cancel clicked!');
     this.isVisibleDetail = false;
     this.isVisibleAdd = false;
+    this.isVisibleComment = false;
   }
 
   showConfirm(id): void {
@@ -332,5 +362,17 @@ export class MainViewComponent implements OnInit {
 
     });
   }
+
+  viewComment(task) {
+    this.isVisibleComment = true;
+    this.formComment.patchValue({
+      taskID: task._id,
+      message: ''
+    });
+    this.taskDescribe = task.describe
+    console.log(task);
+  }
+
+  handleOkComment() {}
 
 }

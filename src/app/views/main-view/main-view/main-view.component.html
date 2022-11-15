@@ -39,7 +39,7 @@
           cdkDropList
           [cdkDropListData]="column.tasks"
           (cdkDropListDropped)="drop($event)">
-            <div class="task" *ngFor="let task of column.tasks" cdkDrag>
+            <div class="task" *ngFor="let task of column.tasks" cdkDrag (dblclick)="viewComment(task)">
               <input *ngIf="isEditing && curTaskId == task.id" type="text" [value]="task.describe">
               {{ task.describe }}
               <div>
@@ -56,6 +56,7 @@
       </div>
     </div>
   </div>
+
   <form [formGroup]="form" (ngSubmit)="handleOk()">
     <nz-modal [(nzVisible)]="isVisibleDetail" nzTitle="Thông tin task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
         <ng-container *nzModalContent>
@@ -64,9 +65,26 @@
     </nz-modal>
   </form>
 
-  <!-- <nz-modal [(nzVisible)]="isVisibleAdd" nzTitle="Thêm task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOkAdd()">
-    <ng-container *nzModalContent>
-      <input [(ngModel)]="selectedTask.describe" nz-input type="text" placeholder="Nhập task">
-    </ng-container>
-  </nz-modal> -->
+  <form [formGroup]="formComment" (ngSubmit)="handleOkComment()">
+    <nz-modal [(nzVisible)]="isVisibleComment" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOkComment()" nzFooter="null">
+      <ng-container *nzModalContent>
+        <div nz-row style="height: 50px; border-bottom: 1px solid #eee; margin-bottom: 10px;">
+          <div nz-col nzSpan="6">Mô tả</div>
+          <div nz-col nzSpan="18">{{taskDescribe}}</div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="6">Comment</div>
+          <div nz-col nzSpan="18">
+            <input nz-input formControlName="message" placeholder="Nhập comment">
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="6"></div>
+          <div nz-col nzSpan="18">
+            <button nz-button nzType="default">Lưu</button>
+          </div>
+        </div>
+      </ng-container>
+    </nz-modal>
+  </form>
 </div>

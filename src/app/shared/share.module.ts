@@ -7,6 +7,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 @NgModule({
   imports: [
@@ -18,7 +20,9 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     NzNotificationModule,
     NzInputModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NzLayoutModule,
+    NzGridModule
   ],
   exports: [
     NzIconModule,
@@ -28,7 +32,9 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     DragDropModule,
     NzInputModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NzLayoutModule,
+    NzGridModule
   ],
   declarations: [],
   providers: [],

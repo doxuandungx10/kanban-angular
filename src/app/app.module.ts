@@ -57,6 +57,7 @@ import { AppConfigService } from 'src/app-config.service';
 import { FormsModule } from '@angular/forms';
 import { NotificationService } from './service/notification.service';
 import { en_US, NZ_I18N } from 'ng-zorro-antd/i18n';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -106,7 +107,8 @@ export function configServiceFactory(config: AppConfigService) {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NzIconModule
+    NzIconModule,
+    NzGridModule
   ],
   providers: [
     NotificationService,
