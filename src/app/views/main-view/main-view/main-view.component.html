@@ -23,11 +23,17 @@
         <div class="board-column" *ngFor="let column of columnStatus">
           <div class="column-title">
             {{ column.name }}
-              <button class="btn-edit" nz-button nzType="default" >
+            <div>
+              <button class="btn-edit" nz-button nzType="default" (click)="showModalAdd(column.status)">
                 <!-- <span nz-icon nzType="more" nzTheme="outline"></span> -->
-                <!-- <span class="fa fa-edit fa-fw"></span> -->
-                <span nz-icon nzType="edit" nzTheme="outline" (click)="showModalAdd(column.status)"></span>
+                A
+                <!-- <span nz-icon nzType="edit" nzTheme="outline"></span> -->
               </button>
+              <button class="btn-edit" nz-button nzType="default" >
+                I
+                <!-- <span nz-icon nzType="plus-circle" nzTheme="outline"></span> -->
+              </button>
+            </div>
           </div>
           <div class="tasks-container"
           cdkDropList
@@ -36,12 +42,14 @@
             <div class="task" *ngFor="let task of column.tasks" cdkDrag>
               <input *ngIf="isEditing && curTaskId == task.id" type="text" [value]="task.describe">
               {{ task.describe }}
-              <button class="btn-edit" nz-button nzType="default" >
-                <span nz-icon nzType="edit" nzTheme="outline" (click)="showModalUpdate(task)"></span>
-              </button>
-              <!-- <button class="btn-edit" nz-button nzType="default">
-                <span nz-icon nzType="edit" nzTheme="outline" (click)="showModalUpdate(task)"></span>
-              </button> -->
+              <div>
+                <button class="btn-edit" nz-button nzType="default" (click)="showModalUpdate(task)">
+                  <span nz-icon nzType="edit" nzTheme="outline"></span>
+                </button>
+                <button class="btn-edit" nz-button nzType="default" (click)="showConfirm(task._id)">
+                  D
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -15,6 +15,7 @@ import { TaskService } from '../../../service/task.service';
 import { BoardService } from '../../../service/board.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-main-view',
@@ -129,7 +130,8 @@ export class MainViewComponent implements OnInit {
     private boardService: BoardService,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: NzModalService,
   ) {}
 
   ngOnInit() {
@@ -271,13 +273,13 @@ export class MainViewComponent implements OnInit {
     if (formValue.task.id == '') {
       delete formValue.task.id;
       this.taskService.addTask(formValue).subscribe(res => {
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-          formValue.task.id = 0;
-        } else {
+        if (res) {
           this.getAllTaskByBoard(this.boardId);
           this.isVisibleDetail = false;
           this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, "Add fail");
+          formValue.task.id = 0;
         }
       }, error => {
 
@@ -287,13 +289,12 @@ export class MainViewComponent implements OnInit {
       delete formValue.task.id;
       delete formValue.task.boardID;
       this.taskService.updateTask(id, formValue).subscribe(res => {
-        // console.log('res', res);
-        if (res.ret && res.ret[0].code !== 0) {
-          this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+        if (res.success == false) {
+          this.notificationService.showNotification(Constant.ERROR, res.message);
         } else {
           this.getAllTaskByBoard(this.boardId);
           this.isVisibleDetail = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_UPDATE_SUCCESS);
+          this.notificationService.showNotification(Constant.SUCCESS, res.message);
         }
       }, error => {
 
@@ -308,4 +309,28 @@ export class MainViewComponent implements OnInit {
     this.isVisibleDetail = false;
     this.isVisibleAdd = false;
   }
+
+  showConfirm(id): void {
+    this.modalService.confirm({
+      nzTitle: 'Confirm',
+      nzContent: 'Bạn có muốn xóa hay không?',
+      nzOkText: 'Đồng ý',
+      nzCancelText: 'Bỏ qua',
+      nzOnOk: () => this.deleteItem(id)
+    });
+  }
+
+  deleteItem(id) {
+    this.taskService.deleteTask(id).subscribe(res => {
+      if (res.ret && res.ret[0].code !== 0) {
+        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
+      } else {
+        this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_DELETE_SUCCESS);
+        this.getAllTaskByBoard(this.boardId);
+      }
+    }, error => {
+
+    });
+  }
+
 }

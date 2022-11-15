@@ -16,4 +16,8 @@ export class TaskService extends BaseService {
   updateTask(id: String, payload: any): any {
     return this.put(UrlConstant.TASK + '/updateTaskById' + '?id=' + id, payload);
   }
+
+  deleteTask(id: String): any {
+    return this.delete(UrlConstant.TASK + "/deleteTaskById" + '?id=' + id, null);
+  }
 }
