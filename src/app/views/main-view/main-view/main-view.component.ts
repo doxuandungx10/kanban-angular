@@ -139,7 +139,7 @@ export class MainViewComponent implements OnInit {
     });
     this.form = this.fb.group({
       id: [null],
-      boardId: [null],
+      boardID: [null],
       describe: [null],
       status: [null]
     });
@@ -244,7 +244,7 @@ export class MainViewComponent implements OnInit {
     this.isVisibleDetail = true;
     this.form.patchValue({
       id: data._id,
-      boardId: this.boardId,
+      boardID: this.boardId,
       describe: data.describe,
       status: data.status
     })
@@ -252,13 +252,13 @@ export class MainViewComponent implements OnInit {
 
   }
 
-  showModalAdd() {
+  showModalAdd(status) {
     this.isVisibleDetail = true;
     this.form.patchValue({
       id: '',
-      boardId: this.boardId,
+      boardID: this.boardId,
       describe: '',
-      status: 0
+      status: status
     })
   }
 
@@ -268,7 +268,7 @@ export class MainViewComponent implements OnInit {
     };
     console.log(formValue);
 
-    if (formValue.task.id === 0) {
+    if (formValue.task.id == '') {
       delete formValue.task.id;
       this.taskService.addTask(formValue).subscribe(res => {
         if (res.ret && res.ret[0].code !== 0) {
@@ -285,7 +285,7 @@ export class MainViewComponent implements OnInit {
     } else {
       let id = formValue.task.id
       delete formValue.task.id;
-      delete formValue.task.boardId;
+      delete formValue.task.boardID;
       this.taskService.updateTask(id, formValue).subscribe(res => {
         // console.log('res', res);
         if (res.ret && res.ret[0].code !== 0) {
