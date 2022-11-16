@@ -13,6 +13,7 @@ import { Column } from 'src/app/models/column.model';
 import { WorkspaceService } from '../../../service/workspace.service';
 import { TaskService } from '../../../service/task.service';
 import { BoardService } from '../../../service/board.service';
+import { CommentService } from '../../../service/comment.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -21,7 +22,13 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   selector: 'app-main-view',
   templateUrl: './main-view.component.html',
   styleUrls: ['./main-view.component.scss'],
-  providers: [WorkspaceService, TaskService, BoardService, NotificationService],
+  providers: [
+    WorkspaceService,
+    TaskService,
+    BoardService,
+    NotificationService,
+    CommentService,
+  ],
 })
 export class MainViewComponent implements OnInit {
   isEditing: boolean = false;
@@ -36,7 +43,8 @@ export class MainViewComponent implements OnInit {
   form: FormGroup;
   formComment: FormGroup;
   isVisibleComment: boolean = false;
-  taskDescribe: String = '';
+  taskSelecting: any;
+  lstComments: any[] = [];
 
   board: Board = new Board('Test Board', [
     new Column('Ideas', [
@@ -129,12 +137,13 @@ export class MainViewComponent implements OnInit {
 
   constructor(
     private workspaceService: WorkspaceService,
+    private commentService: CommentService,
     private taskService: TaskService,
     private boardService: BoardService,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
     private fb: FormBuilder,
-    private modalService: NzModalService,
+    private modalService: NzModalService
   ) {}
 
   ngOnInit() {
@@ -146,7 +155,7 @@ export class MainViewComponent implements OnInit {
       id: [null],
       boardID: [null],
       describe: [null],
-      status: [null]
+      status: [null],
     });
     this.formComment = this.fb.group({
       taskID: [null],
@@ -202,18 +211,18 @@ export class MainViewComponent implements OnInit {
         tasks: [],
       },
     ];
-    this.lstTask = []
+    this.lstTask = [];
     this.boardService.getBoardById(id).subscribe(
       (res: any) => {
         if (res !== null) {
           this.lstTask = res[0].tasks;
-          this.columnStatus.forEach(col =>
-            this.lstTask.forEach(task => {
+          this.columnStatus.forEach((col) =>
+            this.lstTask.forEach((task) => {
               if (col.status == task.status) {
-                col.tasks.push(task)
+                col.tasks.push(task);
               }
             })
-          )
+          );
           console.log('lstColumn', this.columnStatus);
           console.log('lstTask', this.lstTask);
         }
@@ -244,20 +253,27 @@ export class MainViewComponent implements OnInit {
           // boardID: this.boardId,
           // describe: data.describe,
           // status: data.status
-        }
+        },
       };
-      let id = ''
-      this.taskService.updateTask(id, formValue).subscribe(res => {
+      let id = '';
+      this.taskService.updateTask(id, formValue).subscribe(
+        (res) => {
           if (res.success == false) {
-            this.notificationService.showNotification(Constant.ERROR, res.message);
+            this.notificationService.showNotification(
+              Constant.ERROR,
+              res.message
+            );
           } else {
             this.getAllTaskByBoard(this.boardId);
             this.isVisibleDetail = false;
-            this.notificationService.showNotification(Constant.SUCCESS, res.message);
+            this.notificationService.showNotification(
+              Constant.SUCCESS,
+              res.message
+            );
           }
-        }, error => {
-
-        });
+        },
+        (error) => {}
+      );
     }
   }
 
@@ -277,10 +293,9 @@ export class MainViewComponent implements OnInit {
       id: data._id,
       boardID: this.boardId,
       describe: data.describe,
-      status: data.status
-    })
+      status: data.status,
+    });
     console.log(this.form.value);
-
   }
 
   showModalAdd(status) {
@@ -289,47 +304,60 @@ export class MainViewComponent implements OnInit {
       id: '',
       boardID: this.boardId,
       describe: '',
-      status: status
-    })
+      status: status,
+    });
   }
 
   handleOk(): void {
     const formValue = {
-      task: this.form.value
+      task: this.form.value,
     };
     console.log(formValue);
 
     if (formValue.task.id == '') {
       delete formValue.task.id;
-      this.taskService.addTask(formValue).subscribe(res => {
-        if (res) {
-          this.getAllTaskByBoard(this.boardId);
-          this.isVisibleDetail = false;
-          this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_ADD_SUCCESS);
-        } else {
-          this.notificationService.showNotification(Constant.ERROR, "Add fail");
-          formValue.task.id = 0;
-        }
-      }, error => {
-
-      });
+      this.taskService.addTask(formValue).subscribe(
+        (res) => {
+          if (res) {
+            this.getAllTaskByBoard(this.boardId);
+            this.isVisibleDetail = false;
+            this.notificationService.showNotification(
+              Constant.SUCCESS,
+              Constant.MESSAGE_ADD_SUCCESS
+            );
+          } else {
+            this.notificationService.showNotification(
+              Constant.ERROR,
+              'Add fail'
+            );
+            formValue.task.id = 0;
+          }
+        },
+        (error) => {}
+      );
     } else {
-      let id = formValue.task.id
+      let id = formValue.task.id;
       delete formValue.task.id;
       delete formValue.task.boardID;
-      this.taskService.updateTask(id, formValue).subscribe(res => {
-        if (res.success == false) {
-          this.notificationService.showNotification(Constant.ERROR, res.message);
-        } else {
-          this.getAllTaskByBoard(this.boardId);
-          this.isVisibleDetail = false;
-          this.notificationService.showNotification(Constant.SUCCESS, res.message);
-        }
-      }, error => {
-
-      });
+      this.taskService.updateTask(id, formValue).subscribe(
+        (res) => {
+          if (res.success == false) {
+            this.notificationService.showNotification(
+              Constant.ERROR,
+              res.message
+            );
+          } else {
+            this.getAllTaskByBoard(this.boardId);
+            this.isVisibleDetail = false;
+            this.notificationService.showNotification(
+              Constant.SUCCESS,
+              res.message
+            );
+          }
+        },
+        (error) => {}
+      );
       console.log('Button ok clicked!');
-
     }
   }
 
@@ -346,33 +374,70 @@ export class MainViewComponent implements OnInit {
       nzContent: 'Bạn có muốn xóa hay không?',
       nzOkText: 'Đồng ý',
       nzCancelText: 'Bỏ qua',
-      nzOnOk: () => this.deleteItem(id)
+      nzOnOk: () => this.deleteItem(id),
     });
   }
 
   deleteItem(id) {
-    this.taskService.deleteTask(id).subscribe(res => {
-      if (res.ret && res.ret[0].code !== 0) {
-        this.notificationService.showNotification(Constant.ERROR, res.ret[0].message);
-      } else {
-        this.notificationService.showNotification(Constant.SUCCESS, Constant.MESSAGE_DELETE_SUCCESS);
-        this.getAllTaskByBoard(this.boardId);
-      }
-    }, error => {
-
-    });
+    this.taskService.deleteTask(id).subscribe(
+      (res) => {
+        if (res.ret && res.ret[0].code !== 0) {
+          this.notificationService.showNotification(
+            Constant.ERROR,
+            res.ret[0].message
+          );
+        } else {
+          this.notificationService.showNotification(
+            Constant.SUCCESS,
+            Constant.MESSAGE_DELETE_SUCCESS
+          );
+          this.getAllTaskByBoard(this.boardId);
+        }
+      },
+      (error) => {}
+    );
   }
 
   viewComment(task) {
     this.isVisibleComment = true;
+    this.getCommentByTask(task._id);
     this.formComment.patchValue({
+      message: '',
       taskID: task._id,
-      message: ''
     });
-    this.taskDescribe = task.describe
+    this.taskSelecting = task;
     console.log(task);
   }
 
-  handleOkComment() {}
+  getCommentByTask(id) {
+    this.commentService.getAllCmtByTask(id).subscribe(
+      (res: any) => {
+        if (res !== null) {
+          this.lstComments = res.conversation;
+          console.log(this.lstComments);
+        }
+      },
+      (error) => {}
+    );
+  }
 
+  addComment(id) {
+    const formValue = {
+      comment: this.formComment.value,
+    };
+    this.commentService.addComment(formValue).subscribe(
+      (res) => {
+        if (res) {
+          this.getCommentByTask(id);
+          this.notificationService.showNotification(
+            Constant.SUCCESS,
+            Constant.MESSAGE_ADD_SUCCESS
+          );
+        } else {
+          this.notificationService.showNotification(Constant.ERROR, 'Add fail');
+        }
+      },
+      (error) => {}
+    );
+  }
 }

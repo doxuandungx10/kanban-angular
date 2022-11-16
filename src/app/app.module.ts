@@ -93,9 +93,7 @@ export function configServiceFactory(config: AppConfigService) {
     FormModule,
     UtilitiesModule,
     ButtonGroupModule,
-    ReactiveFormsModule,
     SidebarModule,
-    SharedModule,
     TabsModule,
     ListGroupModule,
     ProgressModule,
@@ -108,14 +106,14 @@ export function configServiceFactory(config: AppConfigService) {
     FormsModule,
     ReactiveFormsModule,
     NzIconModule,
-    NzGridModule
+    NzGridModule,
   ],
   providers: [
     NotificationService,
     AppConfigService,
     {
       provide: LocationStrategy,
-      useClass: HashLocationStrategy,
+      useClass: PathLocationStrategy,
     },
     { provide: NZ_I18N, useValue: en_US },
     {

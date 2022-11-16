@@ -5,15 +5,62 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm>
+              <form [formGroup]="validateForm" novalidate="novalidate" (ngSubmit)="submitForm()">
                 <h1>Login</h1>
                 <p class="text-medium-emphasis">Sign In to your account</p>
+                <!-- <ng-container *ngIf="messageError">
+                  <div
+                    class="mb-10 alert alert-custom alert-light-danger alert-dismissible"
+                  >
+                    <div class="alert-text">{{messageError}}</div>
+                  </div>
+                </ng-container> -->
                 <c-input-group class="mb-3">
                   <span cInputGroupText>
                     <svg cIcon name="cilUser"></svg>
                   </span>
-                  <input autoComplete="username" cFormControl placeholder="Username" />
+                  <input
+                  class="form-control form-control-solid h-auto py-7 px-6 rounded-lg"
+                  placeholder="Username"
+                  type="email"
+                  name="email"
+                  formControlName="username"
+                  autocomplete="off"
+                  [ngClass]="{ 'is-invalid': validateForm.controls['username'].invalid }"/>
+                  <!-- <ng-container
+                    [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{
+                      validation: 'required',
+                      message: 'Username is required',
+                      control: validateForm.controls['username']
+                    }"
+                  ></ng-container>
+                  <ng-container
+                    [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{
+                      validation: 'username',
+                      message: 'Username is invalid',
+                      control: validateForm.controls['username']
+                    }"
+                  ></ng-container>
+                  <ng-container
+                    [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{
+                      validation: 'minLength',
+                      message: 'Username should have at least 3 symbols',
+                      control: validateForm.controls['username']
+                    }"
+                  ></ng-container>
+                  <ng-container
+                    [ngTemplateOutlet]="formError"
+                    [ngTemplateOutletContext]="{
+                      validation: 'maxLength',
+                      message: 'Username should have maximum 360 symbols',
+                      control: validateForm.controls['username']
+                    }"
+                  ></ng-container> -->
                 </c-input-group>
+
                 <c-input-group class="mb-4">
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
@@ -59,3 +106,20 @@
     </c-row>
   </c-container>
 </div>
+
+<ng-template
+    #formError
+    let-control="control"
+    let-message="message"
+    let-validation="validation"
+>
+  <ng-container
+    *ngIf="control.hasError(validation) && (control.dirty || control.touched)"
+  >
+    <div class="fv-plugins-message-container">
+      <div class="fv-help-block">
+        {{ message }}
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

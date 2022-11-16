@@ -65,15 +65,19 @@
     </nz-modal>
   </form>
 
-  <form [formGroup]="formComment" (ngSubmit)="handleOkComment()">
-    <nz-modal [(nzVisible)]="isVisibleComment" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOkComment()" nzFooter="null">
+  <form [formGroup]="formComment">
+    <nz-modal [(nzVisible)]="isVisibleComment" (nzOnCancel)="handleCancel()" nzFooter="null">
       <ng-container *nzModalContent>
         <div nz-row style="height: 50px; border-bottom: 1px solid #eee; margin-bottom: 10px;">
           <div nz-col nzSpan="6">Mô tả</div>
-          <div nz-col nzSpan="18">{{taskDescribe}}</div>
+          <div nz-col nzSpan="18">{{taskSelecting.describe}}</div>
         </div>
-        <div nz-row>
-          <div nz-col nzSpan="6">Comment</div>
+        <div nz-row style="margin-bottom: 5px" *ngFor="let comment of lstComments">
+          <div nz-col nzSpan="6" style="font-weight: bold;">{{comment.senderID.name}}:</div>
+          <div nz-col nzSpan="18">{{comment.message}}</div>
+        </div>
+        <div nz-row style="margin-bottom: 5px">
+          <div nz-col nzSpan="6"></div>
           <div nz-col nzSpan="18">
             <input nz-input formControlName="message" placeholder="Nhập comment">
           </div>
@@ -81,7 +85,7 @@
         <div nz-row>
           <div nz-col nzSpan="6"></div>
           <div nz-col nzSpan="18">
-            <button nz-button nzType="default">Lưu</button>
+            <button nz-button nzType="default" (click)="addComment(taskSelecting._id)">Lưu</button>
           </div>
         </div>
       </ng-container>
