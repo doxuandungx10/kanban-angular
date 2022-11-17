@@ -15,7 +15,8 @@ export class NotificationService {
       {
         nzStyle: {
           fontWeight: 'lighter',
-          fontSize: 'larger'
+          fontSize: 'larger',
+          top: '10%'
         },
         nzDuration: 5000,
       }

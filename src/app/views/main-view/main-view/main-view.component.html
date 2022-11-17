@@ -38,7 +38,7 @@
           <div class="tasks-container"
           cdkDropList
           [cdkDropListData]="column.tasks"
-          (cdkDropListDropped)="drop($event)">
+          (cdkDropListDropped)="drop($event, column.status)">
             <div class="task" *ngFor="let task of column.tasks" cdkDrag (dblclick)="viewComment(task)">
               <input *ngIf="isEditing && curTaskId == task.id" type="text" [value]="task.describe">
               {{ task.describe }}

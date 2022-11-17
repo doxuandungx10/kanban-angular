@@ -231,7 +231,7 @@ export class MainViewComponent implements OnInit {
     );
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<any[]>, status) {
     if (event.previousContainer === event.container) {
       console.log(event);
       moveItemInArray(
@@ -239,10 +239,10 @@ export class MainViewComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-    console.log(event.container.data[event.currentIndex]);
+      console.log(event.container.data[event.currentIndex]);
 
     } else {
-      console.log(event);
+      console.log(event, status);
 
       transferArrayItem(
         event.previousContainer.data,
@@ -250,35 +250,34 @@ export class MainViewComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-    console.log(event.container.data[event.currentIndex]);
-
+      console.log(event.container.data[event.currentIndex]);
+      
+      let movingTask = event.container.data[event.currentIndex];
       const formValue = {
         task: {
-          // id: ,
-          // boardID: this.boardId,
-          // describe: data.describe,
-          // status: data.status
+          describe: movingTask.describe,
+          status: status,
         },
       };
-      // let id = '';
-      // this.taskService.updateTask(id, formValue).subscribe(
-      //   (res) => {
-      //     if (res.success == false) {
-      //       this.notificationService.showNotification(
-      //         Constant.ERROR,
-      //         res.message
-      //       );
-      //     } else {
-      //       this.getAllTaskByBoard(this.boardId);
-      //       this.isVisibleDetail = false;
-      //       this.notificationService.showNotification(
-      //         Constant.SUCCESS,
-      //         res.message
-      //       );
-      //     }
-      //   },
-      //   (error) => {}
-      // );
+      this.taskService.updateTask(movingTask._id, formValue).subscribe(
+        (res) => {
+          if (res.success == false) {
+            this.notificationService.showNotification(
+              Constant.ERROR,
+              res.message
+            );
+          } else {
+            this.getAllTaskByBoard(this.boardId);
+            this.isVisibleDetail = false;
+            this.notificationService.showNotification(
+              Constant.SUCCESS,
+              'Cập nhật thành công'
+            );
+            console.log('update success');
+          }
+        },
+        (error) => {}
+      );
     }
   }
 
@@ -356,7 +355,7 @@ export class MainViewComponent implements OnInit {
             this.isVisibleDetail = false;
             this.notificationService.showNotification(
               Constant.SUCCESS,
-              res.message
+              "Cập nhật thành công"
             );
           }
         },
