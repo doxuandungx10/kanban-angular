@@ -232,21 +232,26 @@ export class MainViewComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    console.log(event);
-
     if (event.previousContainer === event.container) {
+      console.log(event);
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+    console.log(event.container.data[event.currentIndex]);
+
     } else {
+      console.log(event);
+
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+    console.log(event.container.data[event.currentIndex]);
+
       const formValue = {
         task: {
           // id: ,
@@ -255,25 +260,25 @@ export class MainViewComponent implements OnInit {
           // status: data.status
         },
       };
-      let id = '';
-      this.taskService.updateTask(id, formValue).subscribe(
-        (res) => {
-          if (res.success == false) {
-            this.notificationService.showNotification(
-              Constant.ERROR,
-              res.message
-            );
-          } else {
-            this.getAllTaskByBoard(this.boardId);
-            this.isVisibleDetail = false;
-            this.notificationService.showNotification(
-              Constant.SUCCESS,
-              res.message
-            );
-          }
-        },
-        (error) => {}
-      );
+      // let id = '';
+      // this.taskService.updateTask(id, formValue).subscribe(
+      //   (res) => {
+      //     if (res.success == false) {
+      //       this.notificationService.showNotification(
+      //         Constant.ERROR,
+      //         res.message
+      //       );
+      //     } else {
+      //       this.getAllTaskByBoard(this.boardId);
+      //       this.isVisibleDetail = false;
+      //       this.notificationService.showNotification(
+      //         Constant.SUCCESS,
+      //         res.message
+      //       );
+      //     }
+      //   },
+      //   (error) => {}
+      // );
     }
   }
 

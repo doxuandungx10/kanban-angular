@@ -1,38 +1,65 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Cookie } from 'ng2-cookies';
-import { Constant } from 'src/app/shared/constants/constant.class';
-
-
+import { Router } from '@angular/router';
+import { AuthService } from '../../../service/auth.service'
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  providers: [AuthService]
 })
 export class LoginComponent {
   validateForm: FormGroup;
-  returnUrl: string;
-  messageError: string;
+  loginPayload = {
+    email: '',
+    password: '',
+  };
+  submitted = false;
+  loading = false;
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.validateForm = this.fb.group({
-      username: [null, [Validators.required]],
+    private authService: AuthService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) {
+    this.validateForm = this.formBuilder.group({
+      email: [null, [Validators.required]],
       password: [null, [Validators.required]],
     });
-    // this.returnUrl =
-    //   this.route.snapshot.queryParams.returnUrl || Constant.ADMIN_DASHBOARD;
-    const currentUser = Cookie.get(Constant.TOKEN);
-    if (currentUser) {
-      this.router.navigate([Constant.ADMIN_DASHBOARD]);
-    }
+    this.loginPayload = {
+      email: '',
+      password: '',
+    };
   }
 
-  submitForm(): void {}
+  ngOnInit() {}
+
+  get f() {
+    return this.validateForm.controls;
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    this.loading = true;
+
+    if (this.validateForm.invalid) {
+      return;
+    }
+
+    this.loginPayload.email = this.f['email'].value;
+    this.loginPayload.password = this.f['password'].value;
+
+    this.authService.login(this.loginPayload).subscribe({
+      next: () => {
+        // get return url from query parameters or default to home page
+        this.router.navigateByUrl('/dashboard');
+        console.log('login success');
+      },
+      error: (error) => {
+        console.log('Login failed');
+        this.loading = false;
+        // this.router.navigateByUrl('/home');
+      },
+    });
+  }
 }
