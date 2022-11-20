@@ -1,7 +1,10 @@
 .root {
     display: flex;
     flex-direction: column;
-    height: 100%;
+}
+
+button:hover{
+    color: red;
 }
 
 .app-name {
@@ -38,62 +41,67 @@
         }
     }
 
-    .board-wrapper {
+    .board-columns {
         display: flex;
         flex-grow: 1;
-        overflow-x: auto;
 
-        .board-columns {
+        .board-column {
             display: flex;
+            flex-direction: column;
             flex-grow: 1;
+            flex-basis: 0; // to force the columns to all be the same size, regardless of content
 
-            .board-column {
+            min-width: 300px;
+            margin-right: 50px;
+            padding: 25px;
+
+            border-radius: 4px;
+
+            background: rgba(white, 0.5);
+
+            &:not(:first-child) {
+                margin-left: 0;
+            }
+
+            .column-title {
+                height: 100px;
+                font-size: 20px;
+                font-weight: 800;
+                font-family: 'Lato', sans-serif;
+                text-transform: uppercase;
+                margin-bottom: 20px;
                 display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-                flex-basis: 0; // to force the columns to all be the same size, regardless of content
-
-                min-width: 300px;
-                margin: 50px;
-                padding: 25px;
-
-                border-radius: 4px;
-
-                background: rgba(white, 0.5);
-
-                &:not(:first-child) {
-                    margin-left: 0;
-                }
-
-                .column-title {
-                    font-size: 20px;
-                    font-weight: 800;
-                    font-family: 'Lato', sans-serif;
-                    text-transform: uppercase;
-                    margin-bottom: 20px;
-                    display: flex;
-                    justify-content: space-between;
-                }
+                justify-content: center;
+                align-items: center;
+                color: white;
+                background-color: coral;
             }
         }
     }
 }
 
-
 .tasks-container {
+    max-height: 408px;
+    margin-bottom: 15px;
     flex-grow: 1;
-    overflow-y: auto; 
+    overflow-y: hidden;
+}
+
+.tasks-container:hover {
+    overflow-y: auto;
 }
 
 .task {
     display: flex;
     justify-content: space-between;
-    padding: 15px 12px;
+    align-items: center;
+    padding: 10px 12px;
     background: white;
     border-bottom: solid 1px #ddd;
     border-radius: 4px;
 
     margin-bottom: 15px;
+    cursor: pointer;
 
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.05),
     0 3px 14px 2px rgba(0, 0, 0, 0.05);
@@ -117,9 +125,4 @@
 
 .tasks-container.cdk-drop-list-dragging .task:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.btn-edit {
-    background-color: white;
-    border: none;
 }
