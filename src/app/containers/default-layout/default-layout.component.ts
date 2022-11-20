@@ -7,6 +7,7 @@ import { WorkspaceService } from 'src/app/service/workspace.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './default-layout.component.html',
+  styleUrls: ['./default-layout.component.scss'],
   providers: [WorkspaceService],
 })
 export class DefaultLayoutComponent {

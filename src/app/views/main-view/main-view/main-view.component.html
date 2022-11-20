@@ -1,4 +1,3 @@
-
 <div class="root">
   <!-- <div class="navbar has-background-dark">
     <div class="navbar-brand">
@@ -11,81 +10,131 @@
   <div class="board">
     <!-- <div class="board-bar">
       <p class="board-name">{{ board2.name }}</p> -->
-      <!-- <nz-tabset>
+    <!-- <nz-tabset>
         <nz-tab nzTitle="Tab 1">Content of Tab Pane 1</nz-tab>
         <nz-tab nzTitle="Tab 2">Content of Tab Pane 2</nz-tab>
         <nz-tab nzTitle="Tab 3">Content of Tab Pane 3</nz-tab>
       </nz-tabset> -->
     <!-- </div> -->
 
-    <div class="board-wrapper">
-      <div class="board-columns" cdkDropListGroup>
-        <div class="board-column" *ngFor="let column of columnStatus">
-          <div class="column-title">
-            {{ column.name }}
-            <div>
-              <button class="btn-edit" nz-button nzType="default" (click)="showModalAdd(column.status)">
-                <!-- <span nz-icon nzType="more" nzTheme="outline"></span> -->
-                A
-                <!-- <span nz-icon nzType="edit" nzTheme="outline"></span> -->
-              </button>
-              <button class="btn-edit" nz-button nzType="default" >
-                I
-                <!-- <span nz-icon nzType="plus-circle" nzTheme="outline"></span> -->
-              </button>
-            </div>
-          </div>
-          <div class="tasks-container"
+    <div class="board-columns" cdkDropListGroup>
+      <div class="board-column h-100" *ngFor="let column of columnStatus">
+        <div class="column-title">
+          {{ column.name }}
+        </div>
+        <div
+          class="tasks-container"
           cdkDropList
           [cdkDropListData]="column.tasks"
-          (cdkDropListDropped)="drop($event, column.status)">
-            <div class="task" *ngFor="let task of column.tasks" cdkDrag (dblclick)="viewComment(task)">
-              <input *ngIf="isEditing && curTaskId == task.id" type="text" [value]="task.describe">
-              {{ task.describe }}
-              <div>
-                <button class="btn-edit" nz-button nzType="default" (click)="showModalUpdate(task)">
-                  <span nz-icon nzType="edit" nzTheme="outline"></span>
-                </button>
-                <button class="btn-edit" nz-button nzType="default" (click)="showConfirm(task._id)">
-                  D
-                </button>
-              </div>
+          (cdkDropListDropped)="drop($event, column.status)"
+        >
+          <div
+            class="task"
+            *ngFor="let task of column.tasks"
+            cdkDrag
+            (dblclick)="viewComment(task)"
+          >
+            <input
+              *ngIf="isEditing && curTaskId == task.id"
+              type="text"
+              [value]="task.describe"
+            />
+            {{ task.describe }}
+            <div>
+              <button
+                class="border border-0"
+                nz-button
+                nzType="default"
+                (click)="showModalUpdate(task)"
+              >
+                <div nz-icon nzType="edit" nzTheme="outline"></div>
+              </button>
+              <button
+                class="border border-0"
+                nz-button
+                nzType="default"
+                (click)="showConfirm(task._id)"
+              >
+                <div nz-icon nzType="delete" nzTheme="outline"></div>
+              </button>
             </div>
           </div>
         </div>
+        <button
+          class="border border-0"
+          nz-button
+          nzType="default"
+          (click)="showModalAdd(column.status)"
+        >
+          <!-- <span nz-icon nzType="more" nzTheme="outline"></span> -->
+          Add task
+          <!-- <span nz-icon nzType="edit" nzTheme="outline"></span> -->
+        </button>
       </div>
     </div>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="handleOk()">
-    <nz-modal [(nzVisible)]="isVisibleDetail" nzTitle="Thông tin task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
-        <ng-container *nzModalContent>
-          <input nz-input formControlName="describe" placeholder="Thêm task">
-        </ng-container>
+    <nz-modal
+      [(nzVisible)]="isVisibleDetail"
+      nzTitle="Thông tin task"
+      (nzOnCancel)="handleCancel()"
+      (nzOnOk)="handleOk()"
+    >
+      <ng-container *nzModalContent>
+        <input nz-input formControlName="describe" placeholder="Thêm task" />
+      </ng-container>
     </nz-modal>
   </form>
 
   <form [formGroup]="formComment">
-    <nz-modal [(nzVisible)]="isVisibleComment" (nzOnCancel)="handleCancel()" nzFooter="null">
+    <nz-modal
+      [(nzVisible)]="isVisibleComment"
+      (nzOnCancel)="handleCancel()"
+      nzFooter="null"
+    >
       <ng-container *nzModalContent>
-        <div nz-row style="height: 50px; border-bottom: 1px solid #eee; margin-bottom: 10px;">
+        <div
+          nz-row
+          style="
+            height: 50px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+          "
+        >
           <div nz-col nzSpan="6">Mô tả</div>
-          <div nz-col nzSpan="18">{{taskSelecting.describe}}</div>
+          <div nz-col nzSpan="18">{{ taskSelecting.describe }}</div>
         </div>
-        <div nz-row style="margin-bottom: 5px" *ngFor="let comment of lstComments">
-          <div nz-col nzSpan="6" style="font-weight: bold;">{{comment.senderID.name}}:</div>
-          <div nz-col nzSpan="18">{{comment.message}}</div>
+        <div
+          nz-row
+          style="margin-bottom: 5px"
+          *ngFor="let comment of lstComments"
+        >
+          <div nz-col nzSpan="6" style="font-weight: bold">
+            {{ comment.senderID.name }}:
+          </div>
+          <div nz-col nzSpan="18">{{ comment.message }}</div>
         </div>
         <div nz-row style="margin-bottom: 5px">
           <div nz-col nzSpan="6"></div>
           <div nz-col nzSpan="18">
-            <input nz-input formControlName="message" placeholder="Nhập comment">
+            <input
+              nz-input
+              formControlName="message"
+              placeholder="Nhập comment"
+            />
           </div>
         </div>
         <div nz-row>
           <div nz-col nzSpan="6"></div>
           <div nz-col nzSpan="18">
-            <button nz-button nzType="default" (click)="addComment(taskSelecting._id)">Lưu</button>
+            <button
+              nz-button
+              nzType="default"
+              (click)="addComment(taskSelecting._id)"
+            >
+              Lưu
+            </button>
           </div>
         </div>
       </ng-container>
