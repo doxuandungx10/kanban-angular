@@ -29,9 +29,9 @@ export class AuthService extends BaseService {
           // window.localStorage.removeItem('username');
           window.localStorage.setItem(
             'authenticationToken',
-            data.authenticationToken
+            data.token
           );
-          window.localStorage.setItem('username', data.username);
+          window.localStorage.setItem('username', data.id);
           return true;
         })
       );
