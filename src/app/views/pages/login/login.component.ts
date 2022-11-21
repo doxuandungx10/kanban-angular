@@ -49,17 +49,23 @@ export class LoginComponent {
     this.loginPayload.email = this.f['email'].value;
     this.loginPayload.password = this.f['password'].value;
 
-    this.authService.login(this.loginPayload).subscribe({
-      next: () => {
-        // get return url from query parameters or default to home page
-        this.router.navigateByUrl('/dashboard');
-        console.log('login success');
+    this.authService.login(this.loginPayload).subscribe(
+      (res) => {
+        console.log(res);
+        
+        if (res.existed) {
+          this.router.navigateByUrl('/dashboard');
+          console.log('login success');
+        } else {
+          console.log('login fail');
+        }
+          // get return url from query parameters or default to home page
       },
-      error: (error) => {
+      (error) => {
         console.log('Login failed');
         this.loading = false;
         // this.router.navigateByUrl('/home');
       },
-    });
+    );
   }
 }

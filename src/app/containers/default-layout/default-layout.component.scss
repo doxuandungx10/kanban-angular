@@ -9,3 +9,11 @@
 .overflow {
     overflow-x: auto;
 }
+
+::ng-deep .cdk-overlay-container {
+    z-index: 9999999999999
+}
+
+::ng-deep .header.header-sticky {
+    z-index: 0
+}

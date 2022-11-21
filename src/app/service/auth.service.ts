@@ -18,7 +18,7 @@ export class AuthService extends BaseService {
     return this.post(UrlConstant.USERS + '/createUser', registerPayload);
   }
 
-  login(loginPayload: any): Observable<boolean> {
+  login(loginPayload: any): Observable<any> {
     return this.httpClient
       .post<JwtAutResponse>(this.baseUrl + '/api/users/login', loginPayload)
       .pipe(
@@ -32,7 +32,7 @@ export class AuthService extends BaseService {
             data.token
           );
           window.localStorage.setItem('username', data.id);
-          return true;
+          return data;
         })
       );
   }
