@@ -134,6 +134,7 @@ export class MainViewComponent implements OnInit {
       tasks: [],
     },
   ];
+  senderID: String = "";
 
   constructor(
     private workspaceService: WorkspaceService,
@@ -158,9 +159,11 @@ export class MainViewComponent implements OnInit {
       status: [null],
     });
     this.formComment = this.fb.group({
+      senderID: [null], 
       taskID: [null],
       message: [null],
     });
+    this.getUser();
   }
 
   getAllBoardByWS() {
@@ -186,6 +189,10 @@ export class MainViewComponent implements OnInit {
     //     });
     //   });
     // });
+  }
+
+  getUser() {
+    this.senderID = localStorage.getItem('id');
   }
 
   getAllTaskByBoard(id) {
@@ -408,6 +415,7 @@ export class MainViewComponent implements OnInit {
     this.formComment.patchValue({
       message: '',
       taskID: task._id,
+      senderID: this.senderID
     });
     this.taskSelecting = task;
     console.log(task);
@@ -417,7 +425,7 @@ export class MainViewComponent implements OnInit {
     this.commentService.getAllCmtByTask(id).subscribe(
       (res: any) => {
         if (res !== null) {
-          this.lstComments = res.conversation;
+          this.lstComments = res.comment;
           console.log(this.lstComments);
         }
       },
@@ -433,9 +441,12 @@ export class MainViewComponent implements OnInit {
       (res) => {
         if (res) {
           this.getCommentByTask(id);
+          this.formComment.patchValue({
+            message: '',
+          });
           this.notificationService.showNotification(
             Constant.SUCCESS,
-            Constant.MESSAGE_ADD_SUCCESS
+            "Comment thành công"
           );
         } else {
           this.notificationService.showNotification(Constant.ERROR, 'Add fail');

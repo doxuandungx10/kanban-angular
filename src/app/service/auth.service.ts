@@ -9,8 +9,9 @@ import { BaseService } from '../shared/base-service/base-service.service';
 import { UrlConstant } from '../shared/constants/url.class';
 
 
-
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService extends BaseService {
   baseUrl = this.configService.getConfig().api.baseUrl;
 
@@ -27,18 +28,15 @@ export class AuthService extends BaseService {
           // this.localStoraqeService.store('username', data.username);
           // window.localStorage.removeItem('authenticationToken');
           // window.localStorage.removeItem('username');
-          window.localStorage.setItem(
-            'authenticationToken',
-            data.token
-          );
-          window.localStorage.setItem('username', data.id);
+          window.localStorage.setItem('token', data.token);
+          window.localStorage.setItem('id', data.id);
           return data;
         })
       );
   }
 
   isAuthenticated(): boolean {
-    return localStorage.getItem('username') != null;
+    return localStorage.getItem('id') != null;
   }
 
   logout() {

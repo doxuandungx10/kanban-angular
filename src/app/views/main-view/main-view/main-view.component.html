@@ -94,14 +94,14 @@
           style="margin-bottom: 5px"
           *ngFor="let comment of lstComments"
         >
-          <div nz-col nzSpan="6" style="font-weight: bold">
+          <div nz-col nzSpan="8" style="font-weight: bold">
             {{ comment.senderID.name }}:
           </div>
-          <div nz-col nzSpan="18">{{ comment.message }}</div>
+          <div nz-col nzSpan="16">{{ comment.message }}</div>
         </div>
         <div nz-row style="margin-bottom: 5px">
-          <div nz-col nzSpan="6"></div>
-          <div nz-col nzSpan="18">
+          <div nz-col nzSpan="8"></div>
+          <div nz-col nzSpan="16">
             <input
               nz-input
               formControlName="message"
@@ -110,8 +110,8 @@
           </div>
         </div>
         <div nz-row>
-          <div nz-col nzSpan="6"></div>
-          <div nz-col nzSpan="18">
+          <div nz-col nzSpan="8"></div>
+          <div nz-col nzSpan="16">
             <button
               nz-button
               nzType="default"
