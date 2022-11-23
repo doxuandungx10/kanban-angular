@@ -36,12 +36,12 @@ export class DefaultLayoutComponent {
       (res: any) => {
         if (res !== null) {
           res[0].boards.forEach((el) =>
-          this.navItems.push({
+            this.navItems.push({
               name: el.name,
               url: `/board/${el._id}`,
-              iconComponent: { name: 'cil-star' },
+              iconComponent: { name: 'cil-star' }
             })
-            );
+          );
             console.log(this.navItems);
           }
           this.showSidebar = true;
